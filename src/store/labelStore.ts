@@ -15,7 +15,7 @@ type LabelStore = {
 
 const labelStore = create<LabelStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       categoryWithColors: [],
       prefectureWithColors: [],
       cityWithColors: [],
@@ -42,7 +42,7 @@ const labelStore = create<LabelStore>()(
         })),
     }),
     {
-      name: "store-storage",
+      name: "label-store-storage",
       storage: createJSONStorage(() => sessionStorage),
       skipHydration: true,
     }
