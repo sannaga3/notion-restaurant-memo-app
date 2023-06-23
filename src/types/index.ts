@@ -10,6 +10,7 @@ export type Post = {
   description: string;
   done: boolean;
   created_at: string;
+  [key: string]: number | string | boolean | Label;
 };
 
 export type Label = {

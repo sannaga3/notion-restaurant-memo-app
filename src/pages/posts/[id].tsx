@@ -60,7 +60,7 @@ const PostDetail: NextPage<Props> = ({ singlePost }) => {
 
   return (
     <>
-      {result?.postList?.length > 0 && (
+      {result?.postList?.length > 0 && post && (
         <div className="grid grid-cols-12 items-center mt-5">
           <div className={`${rowStyle}`}>
             <div className="col-span-4">ID</div>
