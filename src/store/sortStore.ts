@@ -5,9 +5,10 @@ type SortStore = {
   columnName: string;
   direction: string;
   setSort: (columnName: string, direction: string) => void;
+  resetSort: () => void;
 };
 
-const labelStore = create<SortStore>()(
+const sortStore = create<SortStore>()(
   persist(
     (set) => ({
       columnName: "id",
@@ -18,6 +19,12 @@ const labelStore = create<SortStore>()(
           columnName: columnName,
           direction: direction,
         })),
+      resetSort: () =>
+        set((state) => ({
+          ...state,
+          columnName: "id",
+          direction: "desc",
+        })),
     }),
     {
       name: "sort-store-storage",
@@ -27,4 +34,4 @@ const labelStore = create<SortStore>()(
   )
 );
 
-export default labelStore;
+export default sortStore;

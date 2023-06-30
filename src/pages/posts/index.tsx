@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import { getAllPosts } from "@/lib/api/posts";
 import postStore from "@/store/postStore";
@@ -8,29 +8,45 @@ import filterStore from "@/store/filterStore";
 import sortStore from "@/store/sortStore";
 import FilterList from "@/components/filterList";
 import PostItem from "@/components/postItem";
-import SortIcon from "@/components/sortIcon";
+import SortIcon from "@/components/atoms/sortIcon";
 import { Post } from "@/types";
 import { addColorToLabelItem } from "@/utils";
 import { filterPosts, sortPosts } from "@/lib/postsUtil";
+import { checkAuth } from "@/utils/auth";
+import userStore from "@/store/userStore";
+import FlashMessage from "@/components/atoms/fleshMessages";
 
 const noto = Noto_Sans_JP({ subsets: ["latin"] });
 
 type Props = {
   postList: Post[];
+  isLogin: string | null;
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const isAuth = checkAuth(ctx);
+  const isLogin = ctx?.query?.isLogin;
+
+  if (!isAuth) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
   const postList = await getAllPosts();
 
   return {
     props: {
       postList,
-      revalidate: 60,
+      isLogin,
     },
   };
 };
 
-const Home: NextPage<Props> = ({ postList }) => {
+const Home: NextPage<Props> = ({ postList, isLogin }) => {
   const { setPosts } = postStore();
   const {
     categoryWithColors,
@@ -62,6 +78,7 @@ const Home: NextPage<Props> = ({ postList }) => {
     setPrefectureWithColors(result.prefectureWithColors);
     setCityWithColors(result.cityWithColors);
     setStarSiteWithColors(result.starSiteWithColors);
+    userStore.persist.rehydrate();
     postStore.persist.rehydrate();
     filterStore.persist.rehydrate();
     labelStore.persist.rehydrate();
@@ -86,6 +103,20 @@ const Home: NextPage<Props> = ({ postList }) => {
 
   return (
     <div className="flex flex-col items-center">
+      {isLogin && isLogin.length > 0 && (
+        <div className="mt-5">
+          <FlashMessage
+            flashMessage={
+              isLogin
+                ? {
+                    message: "ログアウトしました",
+                    type: "success",
+                  }
+                : null
+            }
+          />
+        </div>
+      )}
       <FilterList />
       {sortedPosts.length > 0 && (
         <div className={`flex flex-col items-center mx-20 ${noto.className}`}>

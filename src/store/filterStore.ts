@@ -15,6 +15,7 @@ type FilterStore = {
   removePrefectureFilters: (labelName: string) => void;
   removeCityFilters: (labelName: string) => void;
   removeStarSiteFilters: (labelName: string) => void;
+  resetFilters: () => void;
 };
 
 const filterStore = create<FilterStore>()(
@@ -74,6 +75,15 @@ const filterStore = create<FilterStore>()(
         set((state) => ({
           ...state,
           starSiteFilters: removed,
+        }));
+      },
+      resetFilters: () => {
+        set((state) => ({
+          ...state,
+          categoryFilters: [],
+          prefectureFilters: [],
+          cityFilters: [],
+          starSiteFilters: [],
         }));
       },
     }),

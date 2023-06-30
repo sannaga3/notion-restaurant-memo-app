@@ -11,6 +11,7 @@ type LabelStore = {
   setPrefectureWithColors: (prefectureWithColors: Label[]) => void;
   setCityWithColors: (cityWithColors: Label[]) => void;
   setStarSiteWithColors: (starSiteWithColors: Label[]) => void;
+  resetLabels: () => void;
 };
 
 const labelStore = create<LabelStore>()(
@@ -39,6 +40,14 @@ const labelStore = create<LabelStore>()(
         set((state) => ({
           ...state,
           starSiteWithColors: labels,
+        })),
+      resetLabels: () =>
+        set((state) => ({
+          ...state,
+          categoryWithColors: [],
+          prefectureWithColors: [],
+          cityWithColors: [],
+          starSiteWithColors: [],
         })),
     }),
     {

@@ -17,3 +17,15 @@ export type Label = {
   name: string;
   color: string;
 };
+
+export type User = {
+  user_name: string;
+  email: string;
+  allow: boolean;
+};
+
+export type Inputs = {
+  userName?: string;
+  email: string;
+  password: string;
+};
